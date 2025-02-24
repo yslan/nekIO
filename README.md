@@ -1,10 +1,22 @@
-# nekdata
-Data export and import to and from Nek5000/NekRS
+# nekIO
 
-Not sure where this project would go, but here are the TODO list:
+A collection of data export and import to and from Nek5000/NekRS.
 
-1. Extra Nek5000/NekRS data into a box data structure.
-   - Running Nek on a box mesh, interpolate the solution onto an unifom but non-overlappinh grid.
-   - Read the outcome in python / matlab and fill the data into a `nx`-by-`ny` box
-   - With the flexibility of incluing or excluding boundary points.
-2. collection of nek reader / writer
+matlab/
+python/
+boxWriter
+
+### Plans:
+
+Not sure where this project would go, but here is my current TODO list:
+
+- Reader and Writer for MAT:AB/Octave and Python
+  nek's rea/re2, con/co2, map/ma2 and `*0.f0001` files
+
+- Box writer
+  Extension of ifreguo
+
+- Adios
+  Tools to extract and splice files.
+  Push reader for visualization (paraview, visit)
+
