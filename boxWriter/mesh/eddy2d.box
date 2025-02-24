@@ -1,0 +1,11 @@
+base.rea
+2                        (spatial dimension)
+1                        (number of fields)
+#
+#   This is a comment
+#
+Box
+-4 -5                (nelx,nely,nelz for Box 1)
+0.0 1.0 1.0
+0.0 1.0 1.0
+P  ,P  ,P  ,P  ,     velocity bc's: Xleft Xright Ybottom Ytop)

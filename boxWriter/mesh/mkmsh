@@ -1,0 +1,74 @@
+#!/bin/bash
+
+if [ "$1" == "clean" ]; then
+  set -x
+  rm *.dra *.jou session.name fort.* 2> /dev/null
+#  rm fluid.rea solid.rea combine.rea out.rea out.re2 2> /dev/null
+  exit 0
+fi
+
+: ${NEK5000_PATH:="$HOME/Nek5000"}
+if [ ! -d "$NEK5000_PATH" ]; then
+  echo "Nek5000 not found at ${NEK5000_PATH}!"
+  exit 1
+fi
+
+tools=(genbox genmap)
+for f in ${tools[@]}; do
+  str="$f=$NEK5000_PATH/bin/$f"
+  eval $str
+  if [ ! -f ${!f} ]; then  # ${!variable} is a variable variables.
+    echo "Cannot find" ${!f}
+    exit 1
+  fi
+done
+
+# no gui mode on server
+: ${GUI:=1}
+if [ $GUI == 0 ]; then
+  if ! command -v xvfb-run 2>&1 >/dev/null; then
+    echo "A NO-GUI mode requires xvfb-run (Xvfb)!"
+    exit 1
+  fi
+  pretex="xvfb-run "$pretex
+fi
+
+function chk_exit_code() {
+   if [ $? -ne 0 ]; then
+      echo "ERROR: non-zero exit code "$?" detected"
+      echo "ERROR: meshig is incomplete, exit"
+      exit -1
+   fi
+}
+
+############################
+# Main Meshing Starts Here #
+############################
+
+$genbox << EOF
+eddy2d.box
+EOF
+chk_exit_code
+mv box.rea eddy_uv2.rea
+
+$genmap << EOF
+eddy_uv2
+
+EOF
+chk_exit_code
+
+
+$genbox << EOF
+eddy3d.box
+EOF
+chk_exit_code
+mv box.rea eddy_uv3.rea
+
+$genmap <<EOF
+eddy_uv3
+
+EOF
+chk_exit_code
+
+
+echo "Reaching the end of meshing script. Hooray!"
